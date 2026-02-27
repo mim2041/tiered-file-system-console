@@ -10,7 +10,6 @@ export const routes = {
     },
     dashboard: {
         root: '/dashboard',
-        profile: '/dashboard/profile',
         settings: '/dashboard/settings',
         reports: '/dashboard/reports',
         apiDocs: '/dashboard/api-docs',
@@ -23,10 +22,6 @@ export const routes = {
         storage: {
             folders: '/dashboard/storage/folders',
             files: '/dashboard/storage/files',
-        },
-        subscriptions: {
-            current: '/dashboard/subscriptions/current',
-            history: '/dashboard/subscriptions/history',
         },
     },
     errors: {

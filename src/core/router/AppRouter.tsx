@@ -28,9 +28,6 @@ const Placeholder = React.lazy(
   () => import("../../features/dashboard/pages/Placeholder")
 );
 
-const Profile = React.lazy(() => import("../../features/user/pages/Profile"));
-const Settings = React.lazy(() => import("../../features/user/pages/Settings"));
-
 const AdminPackages = React.lazy(
   () => import("../../features/subscriptions/pages/AdminPackages")
 );
@@ -93,8 +90,6 @@ const AppRouter: React.FC = () => {
           }
         >
           <Route index element={<DashboardHome />} />
-          <Route path={routes.dashboard.profile} element={<Profile />} />
-          <Route path={routes.dashboard.settings} element={<Settings />} />
           <Route
             path={routes.dashboard.reports}
             element={
@@ -161,15 +156,7 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path={routes.dashboard.subscriptions.current}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <Placeholder />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.subscriptions.history}
+            path={routes.dashboard.settings}
             element={
               <ProtectedRoute requiredRole="admin">
                 <Placeholder />

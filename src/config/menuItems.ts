@@ -33,29 +33,7 @@ export const menuItems: MenuItem[] = [
         ],
     },
 
-    {
-        key: 'subscriptions',
-        label: 'My Subscription',
-        icon: 'SafetyCertificateOutlined',
-        path: '/dashboard/subscriptions/current',
-        children: [
-            { key: 'subscription-current', label: 'Current Plan', icon: 'InfoCircleOutlined', path: '/dashboard/subscriptions/current' },
-            { key: 'subscription-history', label: 'Plan History', icon: 'HistoryOutlined', path: '/dashboard/subscriptions/history' },
-        ],
-    },
-
     { key: 'reports', label: 'Usage Reports', icon: 'BarChartOutlined', path: '/dashboard/reports' },
 
     { key: 'api-docs', label: 'API Docs (Swagger)', icon: 'ApiOutlined', path: '/dashboard/api-docs' },
-
-    {
-        key: 'settings',
-        label: 'Settings',
-        icon: 'SettingOutlined',
-        path: '/dashboard/settings',
-        children: [
-            { key: 'settings-general', label: 'General', icon: 'SettingOutlined', path: '/dashboard/settings' },
-            { key: 'settings-permissions', label: 'Permissions', icon: 'SafetyOutlined', path: '/dashboard/placeholder/settings-permissions' },
-        ],
-    },
 ];

@@ -3,8 +3,6 @@ import React from "react";
 import { Dropdown, Avatar, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
-  UserOutlined,
-  SettingOutlined,
   LogoutOutlined,
   DownOutlined,
 } from "@ant-design/icons";
@@ -26,21 +24,6 @@ const UserMenu: React.FC = () => {
   };
 
   const menuItems = [
-    {
-      key: "profile",
-      icon: <UserOutlined />,
-      label: "Profile",
-      onClick: () => navigate(routes.dashboard.profile),
-    },
-    {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "Settings",
-      onClick: () => navigate(routes.dashboard.settings),
-    },
-    {
-      type: "divider" as const,
-    },
     {
       key: "logout",
       icon: <LogoutOutlined />,
