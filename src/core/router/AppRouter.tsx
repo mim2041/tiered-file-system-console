@@ -34,6 +34,18 @@ const AdminPackages = React.lazy(
 const ApiDocs = React.lazy(
   () => import("../../features/subscriptions/pages/ApiDocs")
 );
+const AdminUsers = React.lazy(
+  () => import("../../features/admin/pages/AdminUsers")
+);
+const AdminAudits = React.lazy(
+  () => import("../../features/admin/pages/AdminAudits")
+);
+const FoldersPage = React.lazy(
+  () => import("../../features/storage/pages/FoldersPage")
+);
+const FilesPage = React.lazy(
+  () => import("../../features/storage/pages/FilesPage")
+);
 
 // Loading spinner component
 const LoadingSpinner = () => (
@@ -127,7 +139,7 @@ const AppRouter: React.FC = () => {
             path={routes.dashboard.admin.users}
             element={
               <ProtectedRoute requiredRole="admin">
-                <Placeholder />
+                <AdminUsers />
               </ProtectedRoute>
             }
           />
@@ -135,7 +147,7 @@ const AppRouter: React.FC = () => {
             path={routes.dashboard.admin.audits}
             element={
               <ProtectedRoute requiredRole="admin">
-                <Placeholder />
+                <AdminAudits />
               </ProtectedRoute>
             }
           />
@@ -143,7 +155,7 @@ const AppRouter: React.FC = () => {
             path={routes.dashboard.storage.folders}
             element={
               <ProtectedRoute requiredRole="admin">
-                <Placeholder />
+                <FoldersPage />
               </ProtectedRoute>
             }
           />
@@ -151,7 +163,7 @@ const AppRouter: React.FC = () => {
             path={routes.dashboard.storage.files}
             element={
               <ProtectedRoute requiredRole="admin">
-                <Placeholder />
+                <FilesPage />
               </ProtectedRoute>
             }
           />
