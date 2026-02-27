@@ -1,0 +1,421 @@
+openapi: 3.0.3
+info:
+  title: SaaS File Management API
+  version: 1.0.0
+  description: API contract for tier-based file and folder management.
+servers:
+  - url: http://localhost:5000/api
+    description: Local
+  - url: https://api.example.com/api
+    description: Production
+
+tags:
+  - name: Auth
+  - name: Packages
+  - name: Subscriptions
+  - name: Folders
+  - name: Files
+  - name: Quota
+  - name: Admin
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /packages:
+    get:
+      tags: [Packages]
+      summary: Get all public subscription packages
+      responses:
+        '200':
+          description: Package list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionPackage'
+
+  /admin/packages:
+    post:
+      tags: [Packages]
+      summary: Create package
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertSubscriptionPackage'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionPackage'
+
+  /admin/packages/{id}:
+    put:
+      tags: [Packages]
+      summary: Update package
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertSubscriptionPackage'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionPackage'
+    delete:
+      tags: [Packages]
+      summary: Delete package
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '204':
+          description: Deleted
+
+  /subscriptions/activate:
+    post:
+      tags: [Subscriptions]
+      summary: Activate package for current user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [packageId]
+              properties:
+                packageId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Activated
+
+  /users/me/subscriptions/history:
+    get:
+      tags: [Subscriptions]
+      summary: Get current user subscription history
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: History
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSubscription'
+
+  /folders:
+    post:
+      tags: [Folders]
+      summary: Create folder with package enforcement
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFolderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+        '422':
+          description: NESTING_LIMIT or QUOTA_EXCEEDED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /files:
+    post:
+      tags: [Files]
+      summary: Upload file with package enforcement
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, folderId]
+              properties:
+                folderId:
+                  type: string
+                  format: uuid
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileEntity'
+        '422':
+          description: TYPE_NOT_ALLOWED or FILE_SIZE_EXCEEDED or QUOTA_EXCEEDED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /users/me/quota:
+    get:
+      tags: [Quota]
+      summary: Get current user quota summary
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Quota
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserQuota'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            authToken:
+              type: string
+            refreshToken:
+              type: string
+
+    SubscriptionPackage:
+      type: object
+      required:
+        - id
+        - name
+        - maxFolders
+        - maxNestingLevel
+        - maxFileSizeMb
+        - totalFileLimit
+        - filesPerFolderLimit
+        - allowedFileTypes
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        maxFolders:
+          type: integer
+        maxNestingLevel:
+          type: integer
+        maxFileSizeMb:
+          type: integer
+        totalFileLimit:
+          type: integer
+        filesPerFolderLimit:
+          type: integer
+        allowedFileTypes:
+          type: array
+          items:
+            type: string
+            enum: [image, video, audio, pdf]
+
+    UpsertSubscriptionPackage:
+      type: object
+      required:
+        - name
+        - maxFolders
+        - maxNestingLevel
+        - maxFileSizeMb
+        - totalFileLimit
+        - filesPerFolderLimit
+        - allowedFileTypes
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        maxFolders:
+          type: integer
+        maxNestingLevel:
+          type: integer
+        maxFileSizeMb:
+          type: integer
+        totalFileLimit:
+          type: integer
+        filesPerFolderLimit:
+          type: integer
+        allowedFileTypes:
+          type: array
+          items:
+            type: string
+            enum: [image, video, audio, pdf]
+
+    UserSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        packageId:
+          type: string
+          format: uuid
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        isActive:
+          type: boolean
+
+    CreateFolderRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+
+    Folder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        depth:
+          type: integer
+
+    FileEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        folderId:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        mimeType:
+          type: string
+        sizeBytes:
+          type: integer
+          format: int64
+
+    UserQuota:
+      type: object
+      properties:
+        folderCount:
+          type: integer
+        fileCount:
+          type: integer
+        usedStorageBytes:
+          type: integer
+          format: int64
+
+    ApiError:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - AUTH_REQUIRED
+            - QUOTA_EXCEEDED
+            - TYPE_NOT_ALLOWED
+            - FILE_SIZE_EXCEEDED
+            - NESTING_LIMIT
+            - FILES_PER_FOLDER_LIMIT
+        message:
+          type: string
+        details:
+          type: object
