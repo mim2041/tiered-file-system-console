@@ -1,8 +1,9 @@
-export type AllowedFileType = 'image' | 'video' | 'audio' | 'pdf';
+export type AllowedFileType = string;
 
 export interface SubscriptionPackage {
   id: string;
   name: 'Free' | 'Silver' | 'Gold' | 'Diamond' | string;
+  slug?: string;
   description?: string;
   maxFolders: number;
   maxNestingLevel: number;
@@ -16,11 +17,18 @@ export interface SubscriptionPackage {
 
 export interface UpsertSubscriptionPackagePayload {
   name: string;
+  slug: string;
   description?: string;
   maxFolders: number;
   maxNestingLevel: number;
   maxFileSizeMb: number;
   totalFileLimit: number;
   filesPerFolderLimit: number;
-  allowedFileTypes: AllowedFileType[];
+  mimeTypes: AllowedFileType[];
+}
+
+export interface ApiEnvelope<T> {
+  success: boolean;
+  message: string;
+  data: T;
 }

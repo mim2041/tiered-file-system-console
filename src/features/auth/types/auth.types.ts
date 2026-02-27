@@ -12,9 +12,8 @@ export interface ApiUser {
     id: string;
     email: string;
     name: string;
-    userType: string;
-    platformRole: string;
-    storeRole: string | null;
+    role: string;
+    isVerified: boolean;
 }
 
 export interface LoginCredentials {
@@ -28,10 +27,11 @@ export interface LoginResponse {
     success: boolean;
     message: string;
     data: {
-        authToken: string;
-        refreshToken: string;
         user: ApiUser;
-        roles: string[];
+        tokens: {
+            accessToken: string;
+            refreshToken: string;
+        };
     };
     path: string;
 }

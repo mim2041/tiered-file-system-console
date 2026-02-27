@@ -25,21 +25,23 @@ import type {
 const { Title, Text } = Typography;
 
 const fileTypeOptions: { label: string; value: AllowedFileType }[] = [
-  { label: 'Image', value: 'image' },
-  { label: 'Video', value: 'video' },
-  { label: 'Audio', value: 'audio' },
-  { label: 'PDF', value: 'pdf' },
+  { label: 'image/jpeg', value: 'image/jpeg' },
+  { label: 'image/png', value: 'image/png' },
+  { label: 'video/mp4', value: 'video/mp4' },
+  { label: 'audio/mpeg', value: 'audio/mpeg' },
+  { label: 'application/pdf', value: 'application/pdf' },
 ];
 
 const initialFormValues: UpsertSubscriptionPackagePayload = {
   name: '',
+  slug: '',
   description: '',
   maxFolders: 10,
   maxNestingLevel: 3,
   maxFileSizeMb: 10,
   totalFileLimit: 50,
   filesPerFolderLimit: 20,
-  allowedFileTypes: ['image', 'pdf'],
+  mimeTypes: ['image/jpeg', 'application/pdf'],
 };
 
 const AdminPackages: React.FC = () => {
@@ -82,13 +84,14 @@ const AdminPackages: React.FC = () => {
     setEditingPackage(row);
     form.setFieldsValue({
       name: row.name,
+      slug: row.slug,
       description: row.description,
       maxFolders: row.maxFolders,
       maxNestingLevel: row.maxNestingLevel,
       maxFileSizeMb: row.maxFileSizeMb,
       totalFileLimit: row.totalFileLimit,
       filesPerFolderLimit: row.filesPerFolderLimit,
-      allowedFileTypes: row.allowedFileTypes,
+      mimeTypes: row.allowedFileTypes,
     });
     setIsModalOpen(true);
   };
@@ -223,12 +226,16 @@ const AdminPackages: React.FC = () => {
             <Input placeholder="Free / Silver / Gold / Diamond" />
           </Form.Item>
 
+          <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
+            <Input placeholder="free / silver / gold / diamond" />
+          </Form.Item>
+
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={2} />
           </Form.Item>
 
           <Form.Item
-            name="allowedFileTypes"
+            name="mimeTypes"
             label="Allowed File Types"
             rules={[{ required: true, message: 'Select at least one file type' }]}
           >

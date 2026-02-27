@@ -13,8 +13,8 @@ export const API_ENDPOINTS = {
 
     USER_SUBSCRIPTIONS: {
         ACTIVATE: '/subscriptions/activate',
-        MY_CURRENT: '/users/me/subscriptions/current',
-        MY_HISTORY: '/users/me/subscriptions/history',
+        MY_CURRENT: '/subscriptions/me',
+        MY_HISTORY: '/subscriptions/me',
     },
 
     FOLDERS: {

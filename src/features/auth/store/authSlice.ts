@@ -71,28 +71,24 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false;
 
-                // Handle the new login API response structure
                 const response = action.payload;
                 const data = response?.data;
 
                 if (data) {
-                    // Extract tokens from the response
-                    state.tokens.accessToken = data.authToken;
-                    state.tokens.refreshToken = data.refreshToken;
+                    state.tokens.accessToken = data.tokens?.accessToken ?? null;
+                    state.tokens.refreshToken = data.tokens?.refreshToken ?? null;
 
-                    // Extract user data
                     if (data.user) {
                         state.user = {
                             id: data.user.id,
                             name: data.user.name,
                             email: data.user.email,
-                            role: data.user.platformRole || data.user.userType || 'user',
-                            status: 'active', // Default status since it's not in the response
+                            role: (data.user.role || 'USER').toLowerCase(),
+                            status: 'active',
                         };
                     }
 
-                    // Set authentication status
-                    state.isAuthenticated = Boolean(data.authToken);
+                    state.isAuthenticated = Boolean(data.tokens?.accessToken);
                 }
 
                 state.error = null;
