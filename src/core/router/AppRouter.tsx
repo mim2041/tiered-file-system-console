@@ -17,34 +17,8 @@ const ResetPassword = React.lazy(
   () => import("../../features/auth/pages/ResetPassword")
 );
 
-// Dashboard pages
-const DashboardHome = React.lazy(
-  () => import("../../features/dashboard/pages/DashboardHome")
-);
-const Reports = React.lazy(
-  () => import("../../features/dashboard/pages/Reports")
-);
-const Placeholder = React.lazy(
-  () => import("../../features/dashboard/pages/Placeholder")
-);
-
 const AdminPackages = React.lazy(
   () => import("../../features/subscriptions/pages/AdminPackages")
-);
-const ApiDocs = React.lazy(
-  () => import("../../features/subscriptions/pages/ApiDocs")
-);
-const AdminUsers = React.lazy(
-  () => import("../../features/admin/pages/AdminUsers")
-);
-const AdminAudits = React.lazy(
-  () => import("../../features/admin/pages/AdminAudits")
-);
-const FoldersPage = React.lazy(
-  () => import("../../features/storage/pages/FoldersPage")
-);
-const FilesPage = React.lazy(
-  () => import("../../features/storage/pages/FilesPage")
 );
 
 // Loading spinner component
@@ -101,77 +75,13 @@ const AppRouter: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<DashboardHome />} />
-          <Route
-            path={routes.dashboard.reports}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <Reports />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.placeholder}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <Placeholder />
-              </ProtectedRoute>
-            }
-          />
-          {/* Admin and storage routes */}
+          <Route index element={<Navigate to={routes.dashboard.admin.packages} replace />} />
+          {/* Admin routes */}
           <Route
             path={routes.dashboard.admin.packages}
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminPackages />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.apiDocs}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <ApiDocs />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.admin.users}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminUsers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.admin.audits}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminAudits />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.storage.folders}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <FoldersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.storage.files}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <FilesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={routes.dashboard.settings}
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <Placeholder />
               </ProtectedRoute>
             }
           />

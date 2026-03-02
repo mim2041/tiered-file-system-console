@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import type { AxiosError } from 'axios';
 import {
   Button,
   Card,
@@ -24,24 +25,44 @@ import type {
 
 const { Title, Text } = Typography;
 
+type ApiRequestErrorBody = {
+  code?: string;
+  errorCode?: string;
+  message?: string;
+};
+
+const getApiErrorCode = (error: unknown): string | undefined => {
+  const responseData = (error as AxiosError<ApiRequestErrorBody>)?.response?.data;
+  return responseData?.code ?? responseData?.errorCode;
+};
+
+const getApiErrorMessage = (error: unknown, fallback: string): string => {
+  const responseData = (error as AxiosError<ApiRequestErrorBody>)?.response?.data;
+  return responseData?.message || fallback;
+};
+
+const isConflictError = (error: unknown): boolean => {
+  const status = (error as AxiosError<ApiRequestErrorBody>)?.response?.status;
+  const code = getApiErrorCode(error);
+  return status === 409 || /CONFLICT|DUPLICATE|ALREADY_EXISTS|PACKAGE_EXISTS/i.test(code ?? '');
+};
+
 const fileTypeOptions: { label: string; value: AllowedFileType }[] = [
-  { label: 'image/jpeg', value: 'image/jpeg' },
-  { label: 'image/png', value: 'image/png' },
-  { label: 'video/mp4', value: 'video/mp4' },
-  { label: 'audio/mpeg', value: 'audio/mpeg' },
-  { label: 'application/pdf', value: 'application/pdf' },
+  { label: 'Image', value: 'image' },
+  { label: 'Video', value: 'video' },
+  { label: 'Audio', value: 'audio' },
+  { label: 'PDF', value: 'pdf' },
 ];
 
 const initialFormValues: UpsertSubscriptionPackagePayload = {
   name: '',
-  slug: '',
   description: '',
   maxFolders: 10,
   maxNestingLevel: 3,
   maxFileSizeMb: 10,
   totalFileLimit: 50,
   filesPerFolderLimit: 20,
-  mimeTypes: ['image/jpeg', 'application/pdf'],
+  allowedFileTypes: ['image', 'pdf'],
 };
 
 const AdminPackages: React.FC = () => {
@@ -84,14 +105,13 @@ const AdminPackages: React.FC = () => {
     setEditingPackage(row);
     form.setFieldsValue({
       name: row.name,
-      slug: row.slug,
       description: row.description,
       maxFolders: row.maxFolders,
       maxNestingLevel: row.maxNestingLevel,
       maxFileSizeMb: row.maxFileSizeMb,
       totalFileLimit: row.totalFileLimit,
       filesPerFolderLimit: row.filesPerFolderLimit,
-      mimeTypes: row.allowedFileTypes,
+      allowedFileTypes: row.allowedFileTypes,
     });
     setIsModalOpen(true);
   };
@@ -108,8 +128,15 @@ const AdminPackages: React.FC = () => {
       }
       closeModal();
       await loadPackages();
-    } catch {
-      message.error('Failed to save package');
+    } catch (error) {
+      if ((error as { errorFields?: unknown[] })?.errorFields) {
+        return;
+      }
+      if (isConflictError(error)) {
+        message.error('Package name or slug already exists. Please use a unique value.');
+        return;
+      }
+      message.error(getApiErrorMessage(error, 'Failed to save package'));
     }
   };
 
@@ -118,8 +145,13 @@ const AdminPackages: React.FC = () => {
       await subscriptionService.deletePackage(id);
       message.success('Package deleted');
       await loadPackages();
-    } catch {
-      message.error('Failed to delete package');
+    } catch (error) {
+      const code = getApiErrorCode(error);
+      if (code === 'PACKAGE_IN_USE') {
+        message.error('Cannot delete package because it is currently used by an active subscription.');
+        return;
+      }
+      message.error(getApiErrorMessage(error, 'Failed to delete package'));
     }
   };
 
@@ -226,16 +258,16 @@ const AdminPackages: React.FC = () => {
             <Input placeholder="Free / Silver / Gold / Diamond" />
           </Form.Item>
 
-          <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
+          {/* <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
             <Input placeholder="free / silver / gold / diamond" />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={2} />
           </Form.Item>
 
           <Form.Item
-            name="mimeTypes"
+            name="allowedFileTypes"
             label="Allowed File Types"
             rules={[{ required: true, message: 'Select at least one file type' }]}
           >

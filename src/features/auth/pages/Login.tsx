@@ -80,7 +80,7 @@ const Login: React.FC = () => {
               Welcome Back
             </Title>
             <Text className="text-sm sm:text-base lg:text-lg text-gray-600">
-              Sign in to your Deshi Bazar account
+              Sign in to your account to continue
             </Text>
           </div>
 

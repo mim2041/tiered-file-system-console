@@ -10,18 +10,8 @@ export const routes = {
     },
     dashboard: {
         root: '/dashboard',
-        settings: '/dashboard/settings',
-        reports: '/dashboard/reports',
-        apiDocs: '/dashboard/api-docs',
-        placeholder: '/dashboard/placeholder/:page',
         admin: {
             packages: '/dashboard/admin/packages',
-            users: '/dashboard/admin/users',
-            audits: '/dashboard/admin/audits',
-        },
-        storage: {
-            folders: '/dashboard/storage/folders',
-            files: '/dashboard/storage/files',
         },
     },
     errors: {

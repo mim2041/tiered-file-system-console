@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { Form, Input, Button, Typography, Alert } from "antd";
 import { useNavigate, Link } from "react-router-dom";
@@ -116,7 +117,7 @@ const ResetPassword: React.FC = () => {
       >
         <div style={{ textAlign: "center", maxWidth: "400px" }}>
           <Title level={1} style={{ color: "white", marginBottom: "1rem" }}>
-            Deshi Bazar
+            Tiered File System
           </Title>
           <Title
             level={3}

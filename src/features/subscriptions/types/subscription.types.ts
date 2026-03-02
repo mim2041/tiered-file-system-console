@@ -1,4 +1,4 @@
-export type AllowedFileType = string;
+export type AllowedFileType = 'image' | 'video' | 'audio' | 'pdf';
 
 export interface SubscriptionPackage {
   id: string;
@@ -17,18 +17,28 @@ export interface SubscriptionPackage {
 
 export interface UpsertSubscriptionPackagePayload {
   name: string;
-  slug: string;
   description?: string;
   maxFolders: number;
   maxNestingLevel: number;
   maxFileSizeMb: number;
   totalFileLimit: number;
   filesPerFolderLimit: number;
-  mimeTypes: AllowedFileType[];
+  allowedFileTypes: AllowedFileType[];
 }
 
 export interface ApiEnvelope<T> {
   success: boolean;
   message: string;
   data: T;
+}
+
+export interface UserSubscriptionHistoryItem {
+  id: string;
+  userId: string;
+  packageId: string;
+  packageName: string;
+  packageSlug: string;
+  startedAt: string;
+  endedAt: string | null;
+  isActive: boolean;
 }

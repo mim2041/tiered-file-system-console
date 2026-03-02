@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const getSelectedKeys = (): string[] => {
     const currentPath = location.pathname;
     const currentItem = findByPath(menuItems, currentPath);
-    return currentItem ? [currentItem.key] : ["dashboard"];
+    return currentItem ? [currentItem.key] : [menuItems[0]?.key ?? ""];
   };
 
   const selectedKeys = getSelectedKeys();
