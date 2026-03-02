@@ -92,9 +92,9 @@ const MaintenanceMode: React.FC<MaintenanceModeProps> = ({
       <div className="max-w-lg w-full relative z-10">
         {/* Brand Header */}
         <div className="flex items-center justify-center mb-6 select-none">
-          <img src="/logo.svg" alt="Data on Deck" className="h-8 w-8 mr-2" />
+          <img src="/logo.svg" alt="Tiered File System" className="h-8 w-8 mr-2" />
           <span className="text-gray-800 text-lg font-semibold tracking-tight">
-            Data on Deck
+            Tiered File System
           </span>
         </div>
         {/* Main Card */}
@@ -111,7 +111,7 @@ const MaintenanceMode: React.FC<MaintenanceModeProps> = ({
 
             <Text className="text-gray-600 text-base leading-relaxed">
               {config.message ||
-                "We're preparing our MVP for launch. Data on Deck will be live soon — thanks for your patience."}
+                "We're preparing our MVP for launch. Tiered File System will be live soon — thanks for your patience."}
             </Text>
           </div>
 

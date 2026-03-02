@@ -66,7 +66,7 @@ class MaintenanceService {
         return {
             isEnabled: ENV.MAINTENANCE_MODE === 'true' || ENV.MAINTENANCE_MODE === '1',
             title: 'Preparing for Launch',
-            message: "We're preparing our MVP for launch. Data on Deck will be live soon — thanks for your patience.",
+            message: "We're preparing our MVP for launch.   Tiered File System will be live soon — thanks for your patience.",
             estimatedDowntime: 'Approximately 30 days',
             contactEmail: 'info@dataondeck.com',
             showCountdown: false,

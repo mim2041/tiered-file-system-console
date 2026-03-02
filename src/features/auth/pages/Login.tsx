@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Form, Input, Button, Typography, Alert, Checkbox } from "antd";
+import { Form, Input, Button, Typography, Alert, Checkbox, Card } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../core/store/hooks";
@@ -55,9 +55,9 @@ const Login: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col lg:grid lg:grid-cols-2"
+      className="min-h-screen grid lg:grid-cols-2"
       style={{
-        backgroundImage: `linear-gradient(#0F2B4BE0, #0F2B4B), url("/bg-auth.png")`,
+        backgroundImage: `linear-gradient(rgba(7, 34, 75, 0.9), rgba(7, 34, 75, 0.9)), url("/bg-auth.png")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -69,40 +69,33 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 lg:flex-none w-full h-full flex flex-col justify-center bg-white p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
-        <div className="max-w-sm sm:max-w-md md:max-w-lg mx-auto w-full">
-          {/* Header */}
-          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-            <Title
-              level={2}
-              className="!text-xl sm:!text-2xl lg:!text-3xl !mb-2 sm:!mb-3"
-            >
-              Welcome Back
+      <div className="w-full h-full flex items-center justify-center bg-white p-5 sm:p-8 lg:p-10 xl:p-12">
+        <Card className="w-full max-w-md !rounded-2xl !border !border-gray-200 !shadow-sm">
+          <div className="text-center mb-7">
+            <Title level={2} className="!mb-2">
+              Admin Sign In
             </Title>
-            <Text className="text-sm sm:text-base lg:text-lg text-gray-600">
-              Sign in to your account to continue
+            <Text type="secondary">
+              Access the console to manage package policies and limits.
             </Text>
           </div>
 
-          {/* Error Alert */}
           {error && (
             <Alert
               message="Login Failed"
               description={error}
               type="error"
               showIcon
-              className="mb-4 sm:mb-6"
+              className="mb-5"
             />
           )}
 
-          {/* Login Form */}
           <Form
             form={form}
             layout="vertical"
             onFinish={onFinish}
             autoComplete="off"
             size="large"
-            className="space-y-4 sm:space-y-6"
           >
             <Form.Item
               name="email"
@@ -111,12 +104,11 @@ const Login: React.FC = () => {
                 { required: true, message: "Please enter your email!" },
                 { type: "email", message: "Please enter a valid email!" },
               ]}
-              className="!mb-4 sm:!mb-6"
             >
               <Input
-                placeholder="Enter your email"
+                placeholder="admin@company.com"
                 prefix={<UserOutlined className="text-gray-400" />}
-                className="!rounded-md !h-12 sm:!h-11 text-base sm:text-sm"
+                className="!rounded-lg !h-11"
               />
             </Form.Item>
 
@@ -126,46 +118,43 @@ const Login: React.FC = () => {
               rules={[
                 { required: true, message: "Please enter your password!" },
               ]}
-              className="!mb-4 sm:!mb-6"
             >
               <Input.Password
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 prefix={<LockOutlined className="text-gray-400" />}
-                className="!rounded-md !h-12 sm:!h-11 text-base sm:text-sm"
+                className="!rounded-lg !h-11"
               />
             </Form.Item>
 
-            <div className="flex items-center justify-between">
+            <div className="mb-6 flex items-center justify-between">
               <Form.Item
                 name="remember"
                 valuePropName="checked"
                 className="!mb-0"
               >
-                <Checkbox className="text-sm sm:text-base">
-                  Remember me
-                </Checkbox>
+                <Checkbox>Remember me</Checkbox>
               </Form.Item>
               <Link
                 to={routes.auth.forgotPassword}
-                className="text-sm sm:text-base text-primary hover:text-primary-hover transition-colors duration-300"
+                className="text-primary hover:text-primary-hover transition-colors duration-300"
               >
                 Forgot password?
               </Link>
             </div>
 
-            <Form.Item className="!mb-4 sm:!mb-6">
+            <Form.Item className="!mb-2">
               <Button
                 type="primary"
                 htmlType="submit"
                 loading={isLoading}
-                className="w-full h-12 sm:h-11 text-base sm:text-sm font-medium"
+                className="w-full !h-11 !font-medium"
                 style={{ background: "var(--color-dod-primary)" }}
               >
-                {isLoading ? "Signing In..." : "Sign In"}
+                {isLoading ? "Signing In..." : "Sign In to Admin Console"}
               </Button>
             </Form.Item>
           </Form>
-        </div>
+        </Card>
       </div>
     </div>
   );
