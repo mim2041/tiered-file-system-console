@@ -44,7 +44,10 @@ export const API_ENDPOINTS = {
   },
 
   ADMIN: {
-    GET_AUDIT_LOGS: '/admin/audit',
+    DASHBOARD_STATS: '/admin/dashboard/stats',
+    GET_AUDIT_LOGS: '/admin/audit-logs',
+    LIST_USERS: '/admin/users',
+    LIST_ENROLLMENTS: '/admin/subscriptions/enrollments',
   },
 
   MEDIA: {

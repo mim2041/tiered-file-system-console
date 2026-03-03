@@ -11,7 +11,11 @@ export const routes = {
     dashboard: {
         root: '/dashboard',
         admin: {
+            home: '/dashboard/admin',
+            users: '/dashboard/admin/users',
             packages: '/dashboard/admin/packages',
+            enrollments: '/dashboard/admin/enrollments',
+            auditLogs: '/dashboard/admin/audit-logs',
         },
     },
     errors: {

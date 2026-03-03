@@ -17,8 +17,24 @@ const ResetPassword = React.lazy(
   () => import("../../features/auth/pages/ResetPassword")
 );
 
+const DashboardHome = React.lazy(
+  () => import("../../features/admin/pages/DashboardHome")
+);
+
+const UsersPage = React.lazy(
+  () => import("../../features/admin/pages/Users")
+);
+
 const AdminPackages = React.lazy(
   () => import("../../features/subscriptions/pages/AdminPackages")
+);
+
+const EnrollmentHistory = React.lazy(
+  () => import("../../features/admin/pages/EnrollmentHistory")
+);
+
+const AuditLogs = React.lazy(
+  () => import("../../features/admin/pages/AuditLogs")
 );
 
 // Loading spinner component
@@ -75,13 +91,45 @@ const AppRouter: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to={routes.dashboard.admin.packages} replace />} />
+          <Route index element={<Navigate to={routes.dashboard.admin.home} replace />} />
           {/* Admin routes */}
+          <Route
+            path={routes.dashboard.admin.home}
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <DashboardHome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={routes.dashboard.admin.users}
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <UsersPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path={routes.dashboard.admin.packages}
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminPackages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={routes.dashboard.admin.enrollments}
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <EnrollmentHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={routes.dashboard.admin.auditLogs}
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AuditLogs />
               </ProtectedRoute>
             }
           />
